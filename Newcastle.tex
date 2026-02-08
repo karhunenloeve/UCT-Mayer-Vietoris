@@ -118,21 +118,6 @@
   \maketitle
 \end{frame}
 
-\begin{frame}{Topics}{What are we going to talk about?}
-  \highlight[blue]{\text{Ample groupoid homology.}} \\
-  {\scriptsize Homology via the Moore chain complex of ample groupoids.}\\[0.3cm]
-  \highlight[blue]{\text{Universal coefficient theorem.}} \\
-  {\scriptsize A universal coefficient theorem for discrete abelian groups.}\\[0.3cm]
-  \highlight[blue]{\text{Moore--Mayer--Vietoris sequence.}} \\
-  {\scriptsize A Mayer--Vietoris type sequence for clopen saturated covers.}
-\end{frame}
-
-\begin{frame}[plain,c]
-  \begin{center}
-    \Huge \textbf{Ample Groupoid Homology}
-  \end{center}
-\end{frame}
-
 \begin{frame}{Standing Hypotheses}{We investigate ample groupoids.}
   We consider \(C_c(\highlight[blue]{\mathcal{G}_n},\highlight[red]{A})\).
 
@@ -264,34 +249,6 @@
     C_c(\G_n,A)\cong \bigoplus_{K\in \mathcal{K}(\G_n)} A,
     \quad \highlight[blue]{\text{free as an \(A\)\nobreakdash-module}}.
   \]
-\end{frame}
-
-\begin{frame}{Non-discrete Coefficients: What Fails}{The general result.}
-For \(X\) $\highlight[blue]{\text{locally compact}}$, $\highlight[blue]{\text{totally disconnected}}$, $\highlight[blue]{\text{Hausdorff}}$ with a $\highlight[blue]{\text{basis of compact open sets}}$ and an abelian group \(A\), consider the canonical map
-\[
-\Phi_X\colon C_c(X,\ZZ)\otimes_{\ZZ}A \to C_c(X,A),
-\qquad
-\chi_U\otimes a \mapsto a\,\chi_U.
-\]
-Then
-\[
-\operatorname{im}(\Phi_X)\subseteq \{\xi\in C_c(X,A)\mid \xi(X)\ \text{is finite}\}.
-\]
-\pause
-
-In particular, \(\Phi_X\) may $\highlight[red]{\text{fail}}$ to be surjective for $\highlight[red]{\text{non-discrete } A}$.
-Moreover,
-\[
-\Phi_X\ \text{surjective}
-\Leftrightarrow
-\forall\,\xi\in C_c(X,A):\ \xi(X)\ \text{finite}
-\Leftrightarrow
-\Phi_X\ \text{is an isomorphism}.
-\]
-\pause
-
-If \(A\) is discrete, then \(\Phi_X\) is an isomorphism.
-The converse can fail.
 \end{frame}
 
 \begin{frame}[plain,c]
@@ -740,6 +697,34 @@ In general, for non-discrete topological abelian groups \(A\), Moore homology ne
   \begin{center}
     \Huge \textbf{Failure of Isomorphism}
   \end{center}
+\end{frame}
+
+\begin{frame}{Non-discrete Coefficients: What Fails}{The general result.}
+For \(X\) $\highlight[blue]{\text{locally compact}}$, $\highlight[blue]{\text{totally disconnected}}$, $\highlight[blue]{\text{Hausdorff}}$ with a $\highlight[blue]{\text{basis of compact open sets}}$ and an abelian group \(A\), consider the canonical map
+\[
+\Phi_X\colon C_c(X,\ZZ)\otimes_{\ZZ}A \to C_c(X,A),
+\qquad
+\chi_U\otimes a \mapsto a\,\chi_U.
+\]
+Then
+\[
+\operatorname{im}(\Phi_X)\subseteq \{\xi\in C_c(X,A)\mid \xi(X)\ \text{is finite}\}.
+\]
+\pause
+
+In particular, \(\Phi_X\) may $\highlight[red]{\text{fail}}$ to be surjective for $\highlight[red]{\text{non-discrete } A}$.
+Moreover,
+\[
+\Phi_X\ \text{surjective}
+\Leftrightarrow
+\forall\,\xi\in C_c(X,A):\ \xi(X)\ \text{finite}
+\Leftrightarrow
+\Phi_X\ \text{is an isomorphism}.
+\]
+\pause
+
+If \(A\) is discrete, then \(\Phi_X\) is an isomorphism.
+The converse can fail.
 \end{frame}
 
 \begin{frame}{Non-discrete Coefficients: What Fails}{Failure of the tensor comparison.}
