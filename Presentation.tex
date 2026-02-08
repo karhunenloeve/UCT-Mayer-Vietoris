@@ -1,0 +1,980 @@
+\documentclass[aspectratio=169]{beamer}
+\usepackage{amsmath,amssymb}
+\usepackage{mathtools}
+\usepackage{euler}
+\usepackage{enumitem}
+\usepackage{appendixnumberbeamer}
+\usepackage{fontawesome5}
+\usefonttheme{professionalfonts}
+\setbeamertemplate{navigation symbols}{}
+
+\usepackage{tikz}
+\usetikzlibrary{calc}
+\usepackage{tikz-cd}
+
+\tikzset{
+  curarrow/.style n args={1}{
+    rounded corners=8pt,
+    to path={
+      -- ([xshift=-50pt]\tikztostart.center)
+      |- (#1) node[fill=white,inner sep=1pt] {$\scriptstyle d_*$}
+      -| ([xshift=50pt]\tikztotarget.center)
+      -- (\tikztotarget)
+      \tikztonodes
+    }
+  }
+}
+
+\usepackage{mymacro}
+\usepackage{tensor}
+\usepackage[
+  backend=biber,
+  style=authoryear,
+  citestyle=authoryear,
+  natbib=true,
+  giveninits=true,
+  uniquename=init,
+  maxcitenames=2,
+  mincitenames=1,
+  maxbibnames=99,
+  date=year,
+  doi=true,
+  url=false,
+  isbn=false,
+  eprint=true,
+  sorting=nyt,
+  sortcites=true,
+  dashed=false
+]{biblatex}
+
+\setbeamertemplate{bibliography item}{
+  \textcolor{structure.fg}{\faBook}
+}
+\addbibresource{Slides.bib}
+
+\renewcommand{\ldots}{
+  \mathinner{{\ldotp}{\ldotp}}
+}
+\newcommand{\G}{\mathcal{G}}
+\newcommand{\K}{\mathcal{K}}
+\newcommand{\Hh}{\mathcal{H}}
+\newcommand{\Gz}{\G^{(0)}}
+\newcommand{\red}[2]{#1\!\mid_{#2}}
+\newcommand{\ZZ}{\mathbb{Z}}
+\newcommand{\Hom}{\operatorname{Hom}}
+\newcommand{\Ob}{\operatorname{Ob}}
+\newcommand{\Top}{\operatorname{Top}}
+\newcommand{\supp}{\operatorname{supp}}
+\newcommand{\fprod}[3]{#1\,\tensor[_#2]{\times}{_{#3}}\,}
+\newcommand{\stimesr}{\tensor[_s]{\times}{_r}}
+\newcommand{\Gstimesr}{\tensor[_{s_{\mathcal{G}}}]{\times}{_{r_{\mathcal{G}}}}}
+\newcommand{\Hstimesr}{\tensor[_{s_{\mathcal{H}}}]{\times}{_{r_{\mathcal{H}}}}}
+\newcommand{\ptimesr}{\tensor[_p]{\times}{_r}}
+
+\usepackage{silence}
+\WarningFilter{latex}{}
+\WarningFilter{transparent}{Loading aborted, because pdfTeX is not running in PDF mode}
+\WarningFilter{inputenc}{inputenc package ignored with utf8 based engines}
+\WarningFilter{latexfont}{}
+\WarningFilter{hyperref}{}
+\WarningFilter{biblatex}{}
+\WarningFilter{biblatex}{Please (re)run Biber on the file}
+\WarningFilter{biblatex}{The following entry could not be found}
+\WarningFilter{biblatex}{Patching footnotes failed}
+\WarningFilter{pdftex}{}
+\WarningFilter{luatex}{}
+\WarningFilter{rerunfilecheck}{}
+\WarningFilter{microtype}{}
+
+\hbadness=10000
+\vbadness=10000
+\hfuzz=1000pt
+\vfuzz=1000pt
+\setlength{\emergencystretch}{2em}
+
+\makeatletter
+\def\@latex@warning#1{}%
+\def\@latex@warning@no@line#1{}%
+\makeatother
+
+\definecolor{gold}{RGB}{184,134,11}
+
+\setbeamertemplate{footline}{
+  \raisebox{10pt}{
+    \makebox[\paperwidth]{
+      \hfill
+      \makebox[7em]{\normalsize\texttt{\insertframenumber/\inserttotalframenumber}}
+    }
+  }
+}
+
+\title{\textbf{Universal Coefficient Theorem} \\ \textbf{Moore-Mayer-Vietoris Sequence} \\ for Homology of Ample Groupoids}
+\author{$\highlight[blue]{\text{Luciano Melodia}}$ {\scriptsize M.A., B.Sc., B.A.}\\ Friedrich-Alexander Universität Erlangen-Nürnberg \\ Department of Mathematics}
+\date{March 10, 2026}
+
+\begin{document}
+
+\begin{frame}[plain]
+  \maketitle
+\end{frame}
+
+\begin{frame}{Topics}{What are we going to talk about?}
+  \highlight[blue]{\text{Ample groupoid homology.}} \\
+  {\scriptsize Homology via the Moore chain complex of ample groupoids.}\\[0.3cm]
+  \highlight[blue]{\text{Universal coefficient theorem.}} \\
+  {\scriptsize A universal coefficient theorem for discrete abelian groups.}\\[0.3cm]
+  \highlight[blue]{\text{Moore--Mayer--Vietoris sequence.}} \\
+  {\scriptsize A Mayer--Vietoris type sequence for clopen saturated covers.}
+\end{frame}
+
+\begin{frame}[plain,c]
+  \begin{center}
+    \Huge \textbf{Ample Groupoid Homology}
+  \end{center}
+\end{frame}
+
+\begin{frame}{Ample groupoids}{What do we investigate?}
+  A $\highlight[blue]{\text{topological groupoid}}$ consists of a space \((\G,\mathcal{O}_{\mathcal{G}})\), a unit space \(\highlight[gold]{\Gz} \subseteq \mathcal{G}\), and maps
+  \[
+    u\colon \Gz\to \G,\qquad
+    s,r\colon \G\to \Gz,\qquad
+    (-)^{-1}\colon \G\to \G,\qquad
+    m\colon \G_2\to \G.
+  \]
+  \[
+    \highlight[red]{s}(g)=g^{-1}\cdot g,
+    \qquad
+    \highlight[red]{r}(g)=g\cdot g^{-1},
+    \qquad
+    u(x)=1_x.
+  \]
+  \pause
+
+  The space of composable pairs is
+  \[
+    \G_2 \coloneqq \G \stimesr \G = \{(g,h)\in \G\times \G \mid s(g)=r(h)\},
+    \qquad
+    m(g,h)=g\cdot h.
+  \]
+  \pause
+
+  The maps \(u,m,s,r,(-)^{-1}\) are continuous and satisfy the groupoid axioms.
+  \pause
+
+  $\highlight[red]{\text{\'Etale:}}$ \(s\colon \G\to \Gz\) is a local homeomorphism.
+  \pause
+
+  $\highlight[gold]{\text{Ample:}}$ \'etale, locally compact, Hausdorff, totally disconnected.
+  \pause
+
+  \(\G\) has a basis of compact open bisections \(U\subseteq \G\), so \(r|_U\) and \(s|_U\) are homeomorphisms onto compact open subsets of \(\Gz\).
+\end{frame}
+
+\begin{frame}{Standing Hypotheses}{We investigate ample groupoids.}
+  We consider \(C_c(\highlight[blue]{\mathcal{G}_n},\highlight[red]{A})\).
+
+  \(\highlight[red]{A}\) is a topological abelian group.
+
+  \(\highlight[blue]{\mathcal{G}}\) is an ample groupoid.
+
+  \(\highlight[blue]{\mathcal{G}_n}\) is the space of \(n\)\nobreakdash-multiplicable arrows.
+
+  \vspace{1em}
+  \pause
+  \(\highlight[blue]{\text{Why is this important?}}\)
+  \vspace{0.2em}
+  \begin{itemize}[noitemsep,nolistsep]
+    \item
+      \(\highlight[blue]{\G \ \text{\'etale:}}\) structure maps in the nerve, such as face maps \(d_i\) and degeneracies \(s_j\), are local homeomorphisms, so pushforwards \((d_i)_*\) are defined by finite fibre sums on compact support.\pause
+    \item
+      \(\highlight[blue]{\G \ \text{ample:}}\) compact open bisections form a basis.
+
+      \(C_c(\G,\ZZ)\) is generated by \(\chi_K\) for compact open sets \(K\).
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{The Nerve}{On what do we compute homology?}
+  \(\G_\bullet\coloneqq (\G_n,(d_i)_{i=0}^n,(s_j)_{j=0}^n)_{n\ge 0}\) is a \(\highlight[red]{\text{simplicial space}}\).
+  \pause
+
+  \(\highlight[blue]{\text{Face maps.}}\)
+  \(d_i\colon \G_n\to \G_{n-1}\), \(n=1\): \(d_0=s\), \(d_1=r\). For \(n\ge 2\):
+  \(
+    d_i(\mathbf{g})\coloneqq
+    \begin{cases}
+      (g_2,\ldots,g_n), & i=0,\\
+      (g_1,\ldots,g_i\cdot g_{i+1},\ldots,g_n), & 1\le i\le n-1,\\
+      (g_1,\ldots,g_{n-1}), & i=n.
+    \end{cases}
+  \)
+  \pause
+  \vspace{0.2cm}
+
+  \(\highlight[blue]{\text{Degeneracy maps.}}\)
+  \(s_j\colon \G_n\to \G_{n+1}\), \(n\ge 0\):
+  \vspace{-0.3em}
+  \(
+  \begin{aligned}
+    s_j(\mathbf{g}) &\coloneqq \begin{cases}
+      u(x), & n=0,\ x\in \G_0,\\
+      (u(r(g_1)),g_1,\ldots,g_n), & n\ge 1,\ j=0,\\
+      (g_1,\ldots,g_j,\,u(r(g_{j+1})),\,g_{j+1},\ldots,g_n), & n\ge 2,\ 1\le j\le n-1,\\
+      (g_1,\ldots,g_n,\,u(s(g_n))), & n\ge 1,\ j=n.
+    \end{cases}\\
+   \G_n &\coloneqq
+    \begin{cases}
+      \G_0, & n=0,\\
+      \{\mathbf{g} \in \G^{\,n}\mid s(g_i)=r(g_{i+1})\ \text{for}\ 1\le i<n\}, & n\ge 1.
+    \end{cases}
+  \end{aligned}
+  \)
+\end{frame}
+
+\begin{frame}{Moore Chains and Boundary}{Compactly supported chains on the nerve.}
+  \(\highlight[blue]{\text{Chains.}}\)
+  \(C_c(\G_n,A)\) denotes the abelian group of continuous maps \(f\colon \G_n\to A\) with \(\highlight[gold]{\text{compact support}}\).
+  If \(A\) is \(\highlight[red]{\text{discrete}}\), then every \(f\in C_c(\G_n,A)\) is \(\highlight[gold]{\text{locally constant}}\).
+  \pause
+  \vspace{0.3cm}
+
+  \(\highlight[blue]{\text{Boundary.}}\)
+  Since \(\G\) is \'etale, each face map \(d_i\colon \G_n\to \G_{n-1}\) is a local homeomorphism, hence the pushforward is well-defined:
+  \[
+    \begin{aligned}
+      (d_i)_* &: C_c(\G_n,A)\to C_c(\G_{n-1},A),
+      \qquad
+      (d_i)_*f(y)\coloneqq \sum_{x\in d_i^{-1}(y)\cap \supp(f)} f(x),\\[-1.2em]
+      \partial_n &\coloneqq \sum_{i=0}^n (-1)^i (d_i)_*
+      \colon C_c(\G_n,A)\to C_c(\G_{n-1},A).
+    \end{aligned}
+  \]
+\end{frame}
+
+\begin{frame}{Moore Chains and Boundary}{How is this a chain complex?}
+  $\highlight[blue]{\text{\(\G\) is ample}}$
+  $\Rightarrow$
+  $\highlight[blue]{\text{\(d_i\) local homeomorphism}}$
+  $\Rightarrow$
+  $\highlight[blue]{\text{\(d_i^{-1}(y)\) discrete.}}$
+  \vspace{0.2cm}
+  \pause
+
+  If \(f\in C_c(\G_n,A)\), then for each \(y\in \G_{n-1}\) the set
+  \(\highlight[red]{d_i^{-1}(y)\cap \supp(f)}\) is finite, as a discrete subset of the compact space \(\supp(f)\).
+  Hence
+  \[
+    (d_i)_*f(y)\coloneqq \sum_{x\in d_i^{-1}(y)\cap \supp(f)} f(x)
+    \quad \text{is well-defined.}
+  \]
+  \pause
+
+  \(\highlight[blue]{(d_i)_*f\in C_c(\G_{n-1},A):}\)
+  it has compact support since
+  \[
+    \supp\bigl((d_i)_*f\bigr)\subseteq d_i\bigl(\supp(f)\bigr),
+  \]
+  and it is \(\highlight[red]{\text{locally constant}}\) on \(\G_{n-1}\) when \(A\) is discrete, by local triviality of \(d_i\) over \(\supp(f)\).
+\end{frame}
+
+\begin{frame}{Moore Chains and Boundary}{The identity \(\partial^2=0\).}
+  \(\highlight[blue]{\partial_{n-1}\partial_n=0:}\)
+  By definition,
+  \[
+    \partial_{n-1}\partial_n
+    =\sum_{i=0}^{n-1}\sum_{j=0}^{n}(-1)^{i+j}(d_i)_*\circ(d_j)_*.
+  \]
+  For \(i<j\), the simplicial identities give \(\highlight[red]{d_i d_j=d_{j-1}d_i}\), hence by functoriality of pushforward,
+  \[
+    (d_i)_*\circ(d_j)_*=(d_i d_j)_*=(d_{j-1}d_i)_*=(d_{j-1})_*\circ(d_i)_*.
+  \]
+  Therefore the terms cancel in pairs and
+  \[
+    \partial_{n-1}\partial_n
+    =\sum_{0\le i<j\le n}(-1)^{i+j}\Bigl((d_i)_*(d_j)_*-\highlight[red]{(d_{j-1})_*(d_i)_*}\Bigr)=0.
+  \]
+\end{frame}
+
+\begin{frame}[plain,c]
+  \begin{center}
+    \Huge \textbf{Universal Coefficient Theorem}
+  \end{center}
+\end{frame}
+
+\begin{frame}{Universal Coefficient Theorem}{Is \(\ZZ\) enough to recover homology through \(A\)?}
+  \(\G\) ample groupoid.\\
+  \(A\) discrete abelian group.\\\pause
+  For all \(n\ge 0\) there is a natural short exact sequence in \(\mathbf{Ab}\):
+  \[
+    0
+    \to H_n(\G)\otimes_{\ZZ} A
+    \xrightarrow{\highlight[red]{\iota_n^{\G}}}
+    H_n(\G;A)
+    \xrightarrow{\highlight[blue]{\pi_n^{\G}}}
+    \operatorname{Tor}_1^{\ZZ}\bigl(H_{n-1}(\G),A\bigr)
+    \to 0.
+  \]
+  The sequence splits, though not canonically:
+  \[
+    H_n(\G;A)
+    \cong
+    \bigl(H_n(\G)\otimes_{\ZZ} A\bigr)
+    \oplus
+    \operatorname{Tor}_1^{\ZZ}\bigl(H_{n-1}(\G),A\bigr).
+  \]
+\end{frame}
+
+\begin{frame}{Universal Coefficient Theorem}{If \(A\) is discrete, then \(C_c(\G_n,A)\) is a free \(A\)-module.}
+  Assume \(A\) is a \(\highlight[red]{\text{discrete abelian group}}\) and \(\G\) is ample.
+
+  If \(f\in C_c(\G_n,A)\), then for each \(a\in A\) the fibre \(f^{-1}(\{a\})\subseteq \G_n\) is open.
+  Since \(A\) is discrete, \(f^{-1}(\{a\})\) is also closed. Thus each \(f^{-1}(\{a\})\) is \(\highlight[red]{\text{clopen}}\).
+  \vspace{0.3cm}
+  \pause
+  
+  \(\supp(f)\) is compact \(\Rightarrow\) \(\operatorname{im}(f)\subseteq A\) is compact, hence finite.
+  \vspace{0.3cm}
+
+  \pause
+  \(\highlight[blue]{\text{Why is \(f\) locally constant?}}\)
+
+  Fix \(g\in \G_n\). Since \(A\) is discrete, the singleton \(\{f(g)\}\subseteq A\) is open. Therefore
+  \[
+    U_g\coloneqq f^{-1}\bigl(\{f(g)\}\bigr)
+  \]
+  is an open neighborhood of \(g\) in \(\G_n\).
+  If \(h\in U_g\), then
+  \[
+    h\in f^{-1}\bigl(\{f(g)\}\bigr)
+    \Leftrightarrow
+    f(h)\in \{f(g)\}
+    \Leftrightarrow
+    f(h)=f(g).
+  \]
+\end{frame}
+
+\begin{frame}{Universal Coefficient Theorem}{If \(A\) is discrete, then \(C_c(\G_n,A)\) is a free \(A\)-module.}
+  Let \(f\in C_c(\G_n,A)\). Since \(A\) is discrete and \(\supp(f)\) is compact, \(\operatorname{im}(f)=\{a_1,\ldots,a_m\}\) is finite.
+  Set \(K_i\coloneqq f^{-1}(\{a_i\})\) for \(1\le i\le m\).\pause
+  
+  Each \(K_i\) is clopen in \(\G_n\), the sets \(K_i\) are pairwise disjoint, and \(\supp(f)=\bigsqcup_{i=1}^m K_i\).
+  \[
+    f=\sum_{i=1}^m a_i\,\chi_{K_i}\qquad\text{in }C_c(\G_n,A).
+  \]
+  \pause
+  Therefore the canonical map
+  \[
+    \bigoplus_{K\in \mathcal{K}(\G_n)} A \longrightarrow C_c(\G_n,A),
+    \qquad
+    (a_K)_{K\in \mathcal{K}(\G_n)}\longmapsto \sum_{K\in \mathcal{K}(\G_n)} a_K\,\chi_K,
+  \]
+  is surjective.
+  It is injective: if \(\sum_{i=1}^m a_i\,\chi_{K_i}=0\) with \(K_i\) pairwise disjoint compact open, then evaluating at any \(g\in K_i\) gives \(a_i=0\).
+  Thus
+  \[
+    C_c(\G_n,A)\cong \bigoplus_{K\in \mathcal{K}(\G_n)} A,
+    \quad \highlight[blue]{\text{free as an \(A\)\nobreakdash-module}}.
+  \]
+\end{frame}
+
+\begin{frame}{Proof of the UCT}{Step 1: Chain-level identification.}
+Let \(f\in C_c(\G_n,A)\) and write \(\operatorname{im}(f)=\{a_1,\ldots,a_m\}\).
+Set \(K_i\coloneqq f^{-1}(\{a_i\})\). Then \(\supp(f)=\bigsqcup_{i=1}^m K_i\) with \(K_i\) clopen and \(f|_{K_i}\equiv a_i\).
+
+\vspace{0.15cm}
+
+\(\highlight[red]{\text{Extension by \(0\):}}\) \(\chi_{K_i}\in C_c(\G_n,\ZZ)\) and
+\[
+f=\sum_{i=1}^m a_i\,\chi_{K_i}\qquad\text{in }C_c(\G_n,A).
+\]
+
+\vspace{0.15cm}
+\pause
+
+Define the canonical \(\ZZ\)-bilinear map
+\[
+\Phi_{\G_n}\colon C_c(\G_n,\ZZ)\otimes_{\ZZ}A \longrightarrow C_c(\G_n,A),
+\qquad
+\xi\otimes a \longmapsto a\cdot \xi.
+\]
+\pause
+\[
+\Phi_{\G_n}\ \text{is surjective, and injective since } C_c(\G_n,\ZZ)\ \text{is free on }\{\chi_K\mid K\in \mathcal K(\G_n)\}.
+\]
+\pause
+\[
+C_c(\G_n,\ZZ)\otimes_{\ZZ}A \cong C_c(\G_n,A)
+\qquad \text{for discrete }A.
+\]
+\end{frame}
+
+\begin{frame}{Proof of the UCT}{Step 2: Compatibility with the boundary.}
+For each face map \(d_i\colon \G_n\to \G_{n-1}\), the pushforward \((d_i)_*\) is \(\ZZ\)-linear and satisfies
+\[
+(d_i)_*(\xi\cdot a)=\bigl((d_i)_*\xi\bigr)\cdot a
+\qquad
+\text{for } \xi\in C_c(\G_n,\ZZ),\ a\in A.
+\]
+\pause
+
+Hence \(\Phi_{\G_\bullet}\) intertwines the Moore boundary:
+\[
+\Phi_{\G_{n-1}}\circ(\partial_n\otimes \mathrm{id}_A)=\partial_n\circ \Phi_{\G_n}.
+\]
+\pause
+
+Therefore \(\Phi_{\G_\bullet}\) is an isomorphism of chain complexes
+\[
+C_c(\G_\bullet,\ZZ)\otimes_{\ZZ} A \cong C_c(\G_\bullet,A).
+\]
+\end{frame}
+
+\begin{frame}{Proof of the UCT}{Step 3: Apply the classical algebraic UCT.}
+The Moore complex \(C_c(\G_\bullet,\ZZ)\) is a chain complex of free abelian groups.
+Applying the classical algebraic UCT to \(C_c(\G_\bullet,\ZZ)\) and transporting across the chain isomorphism from Steps 1--2 yields, for all \(n\ge 0\), a short exact sequence
+\[
+0
+\to H_n(\G)\otimes_{\ZZ} A
+\xrightarrow{\iota_n^{\G}}
+H_n(\G;A)
+\xrightarrow{\pi_n^{\G}}
+\operatorname{Tor}_1^{\ZZ}\bigl(H_{n-1}(\G),A\bigr)
+\to 0.
+\]
+\pause
+
+This sequence is natural in \(\G\) and in discrete \(A\).
+In general, for non-discrete topological abelian groups \(A\), Moore homology need not satisfy such a UCT.
+\end{frame}
+
+\begin{frame}{Non-discrete Coefficients: What Fails}{The general result.}
+For \(X\) $\highlight[blue]{\text{locally compact}}$, $\highlight[blue]{\text{totally disconnected}}$, $\highlight[blue]{\text{Hausdorff}}$ with a $\highlight[blue]{\text{basis of compact open sets}}$ and an abelian group \(A\), consider the canonical map
+\[
+\Phi_X\colon C_c(X,\ZZ)\otimes_{\ZZ}A \to C_c(X,A),
+\qquad
+\chi_U\otimes a \mapsto a\,\chi_U.
+\]
+Then
+\[
+\operatorname{im}(\Phi_X)\subseteq \{\xi\in C_c(X,A)\mid \xi(X)\ \text{is finite}\}.
+\]
+\pause
+
+In particular, \(\Phi_X\) may $\highlight[red]{\text{fail}}$ to be surjective for $\highlight[red]{\text{non-discrete } A}$.
+Moreover,
+\[
+\Phi_X\ \text{surjective}
+\Leftrightarrow
+\forall\,\xi\in C_c(X,A):\ \xi(X)\ \text{finite}
+\Leftrightarrow
+\Phi_X\ \text{is an isomorphism}.
+\]
+\pause
+
+If \(A\) is discrete, then \(\Phi_X\) is an isomorphism.
+The converse can fail.
+\end{frame}
+
+\begin{frame}{Non-discrete Coefficients: What Fails}{Failure of the tensor comparison.}
+If $\highlight[red]{\text{$A$ is non-discrete}}$ and $\highlight[red]{\text{$0\in A$ is not isolated}}$, then surjectivity of \(\Phi_X\) can fail even for compact, totally disconnected spaces with a basis of clopen subsets.
+Set
+\[
+\begin{aligned}
+X &\coloneqq \left\{\sum_{n=1}^\infty \frac{a_n}{3^n}\ \middle|\ a_n\in\{0,2\}\right\}\subset [0,1],\\
+A &\coloneqq (\mathbb{R},\mathcal{O}_{\mathrm{std}}),\\
+\xi &\colon X\to A,\quad x\mapsto x.
+\end{aligned}
+\]
+Then \(X\) is compact, Hausdorff, totally disconnected, and has a basis of clopen subsets.
+Hence \(\xi\in C_c(X,A)\) and \(\xi(X)=X\) is infinite.
+Therefore \(\xi\notin \operatorname{im}(\Phi_X)\), so \(\Phi_X\) is not surjective.
+\end{frame}
+
+\begin{frame}{Non-discrete Coefficients: What Fails}{Isomorphism without discreteness.}
+\[
+A \coloneqq (\mathbb{R},\mathcal{O}_{\mathrm{std}}),
+\qquad
+(\{\bullet\}, \mathcal{O}_{\{\bullet\}}\coloneq\{\varnothing,\{\bullet\}\}).
+\]
+Then $\{\bullet\}$ is locally compact, totally disconnected, Hausdorff, and $X$ is compact open.
+\[
+\begin{aligned}
+C_c(\{\bullet\},\mathbb{Z}) &\cong \mathbb{Z},\\
+C_c(\{\bullet\},A) &\cong A,\\
+C_c(\{\bullet\},\mathbb{Z})\otimes_{\mathbb{Z}}A &\cong \mathbb{Z}\otimes_{\mathbb{Z}}A\cong A.
+\end{aligned}
+\]
+Under these identifications the canonical map
+\[
+\Phi_{\{\bullet\}}:\ C_c(\{\bullet\},\mathbb{Z})\otimes_{\mathbb{Z}}A\to C_c(\{\bullet\},A),
+\qquad
+\chi_{\{\bullet\}}\otimes a\mapsto a\cdot \chi_{\{\bullet\}},
+\]
+is the standard isomorphism $\mathbb{Z}\otimes_{\mathbb{Z}}A\to A$, $1\otimes a\mapsto a$.
+\end{frame}
+
+\begin{frame}[plain,c]
+  \begin{center}
+    \Huge \textbf{Moore-Mayer-Vietoris Sequence}
+  \end{center}
+\end{frame}
+
+\begin{frame}{Mayer-Vietoris vs. Moore-Mayer-Vietoris}{From saturated covers to homology.}
+  \begin{columns}[t]
+    \begin{column}{0.483\hsize}
+      \(\highlight[red]{\textbf{Mayer--Vietoris:}}\)
+      \vspace{0.2cm}
+
+      \(
+      \begin{aligned}
+      &X = U_1\cup U_2, \\ &U_1,U_2 \subseteq X \text{ open}.
+      \end{aligned}
+      \)
+      \vspace{0.3cm}
+
+      \(\highlight[blue]{\text{Good cover:}}\)
+
+      \(U_1,\ U_2,\ U_1\cap U_2\) contractible.\\[0.4em]
+      In general: any nonempty finite intersection is contractible.
+
+      \vspace{0.6cm}
+
+      \(
+      \highlight[gold]{\text{Compute \(H_\bullet(X)\) from:}}
+      \)
+
+      \(H_\bullet(U_1)\), \(H_\bullet(U_2)\), \(H_\bullet(U_1\cap U_2)\).
+    \end{column}
+    \begin{column}{0.517\hsize}
+      \(\highlight[red]{\textbf{Moore--Mayer--Vietoris:}}\)
+      \vspace{0.2cm}
+      \pause
+
+      \(
+      \begin{aligned}
+      &\G_0=U_1\cup U_2,\\
+      &U_1,U_2 \subseteq \G_0 \ \text{clopen.}
+      \end{aligned}
+      \)
+      \vspace{0.3cm}
+      \pause
+
+      \(\highlight[blue]{\text{Saturated cover:}}\)
+
+      \(\forall \ x\in U:\ s(g)=x \Rightarrow r(g)\in U\).\\[0.4em]
+      \(\G|_U \coloneqq \{g\in \G \mid s(g),r(g)\in U\}\),
+      
+      \(\G|_U\hookrightarrow \G\) open.
+
+      \vspace{0.6cm}
+      \pause
+
+      \(\highlight[gold]{\text{Compute \(H_\bullet(\G)\) from:}}\)
+
+      \(H_\bullet(\G|_{U_1})\), \(H_\bullet(\G|_{U_2})\), \(H_\bullet(\G|_{U_1\cap U_2})\).
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Reductions and Moore--Mayer--Vietoris}{Long Natural Moore-Mayer-Vietoris Sequence for Homology.}
+For \(U\subseteq \G_0\) define the reduction
+\[
+\G|_U \coloneqq \{g\in \G \mid s(g)\in U,\ r(g)\in U\},
+\qquad
+(\G|_U)_0 = U,
+\]
+with structure maps the restrictions of \(u,m,s,r,-^{-1}\) to \(\G|_U\).
+For \(i\in\{1,2\}\) and \(U_{12}\coloneqq U_1\cap U_2\) we write
+\(\G|_{U_i}\) and \(\G|_{U_{12}}\).
+
+\vspace{0.3cm}
+\pause
+
+\begin{center}
+$\highlight[blue]{\textbf{Moore--Mayer--Vietoris long exact homology sequence:}}$
+\vspace{0.3cm}
+
+\includegraphics[width=13cm]{mvs.png}
+\end{center}
+\end{frame}
+
+\begin{frame}{Proof of Moore--Mayer--Vietoris}{Proof idea for \(H_n(\alpha_\bullet)\).}
+  \((\iota_i)_n\colon (\G|_{U_{12}})_n\hookrightarrow (\G|_{U_i})_n\) is an open embedding, hence a local homeomorphism.
+  Therefore the functorial pushforward on Moore chains
+  \[
+    ((\iota_i)_n)_*\colon
+    C_c\bigl((\G|_{U_{12}})_n,A\bigr)\to C_c\bigl((\G|_{U_i})_n,A\bigr)
+  \]
+  is given by a \(\highlight[red]{\text{finite fibre sum}}\).
+  Since \((\iota_i)_n\) is injective, it is extension by zero:
+  \[
+    ((\iota_i)_n)_* f(x)\coloneqq
+    \begin{cases}
+      f(x), & x\in (\G|_{U_{12}})_n,\\
+      0, & x\in (\G|_{U_i})_n\setminus (\G|_{U_{12}})_n.
+    \end{cases}
+  \]
+  \pause
+
+  Define the chain map
+  \[
+    \begin{aligned}
+      \alpha_n\colon C_c\bigl((\G|_{U_{12}})_n,A\bigr)
+      &\to
+      C_c\bigl((\G|_{U_1})_n,A\bigr)\oplus C_c\bigl((\G|_{U_2})_n,A\bigr),\\
+      f &\mapsto \bigl(((\iota_1)_n)_* f,\,-((\iota_2)_n)_* f\bigr).
+    \end{aligned}
+  \]
+  \(\highlight[blue]{\text{Compatibility:}}\)
+  \(
+    \partial\,((\iota_i)_n)_* = ((\iota_i)_{n-1})_*\,\partial,
+    \partial\,\alpha_n = \alpha_{n-1}\,\partial.
+  \)
+  Hence \(\alpha_\bullet\) induces \(H_n(\alpha_\bullet)\).
+\end{frame}
+
+\begin{frame}{Moore--Mayer--Vietoris}{Proof idea for \(H_n(\beta_\bullet)\).}
+  Let \(\kappa_i\colon \G|_{U_i}\hookrightarrow \G\) be the inclusion of reductions.
+
+  \((\kappa_i)_n\colon (\G|_{U_i})_n\hookrightarrow \G_n\) is an open embedding, hence a local homeomorphism.
+  Therefore the pushforward on Moore chains extends by zero:
+  \[
+    ((\kappa_i)_n)_* g(x)\coloneqq
+    \begin{cases}
+      g(x), & x\in (\G|_{U_i})_n,\\
+      0, & x\in \G_n\setminus (\G|_{U_i})_n.
+    \end{cases}
+  \]
+
+  Define
+  \[
+    \begin{aligned}
+      \beta_n\colon
+      C_c\bigl((\G|_{U_1})_n,A\bigr)\oplus C_c\bigl((\G|_{U_2})_n,A\bigr)
+      &\to C_c(\G_n,A),\\
+      (g_1,g_2) &\mapsto ((\kappa_1)_n)_* g_1 + ((\kappa_2)_n)_* g_2.
+    \end{aligned}
+  \]
+  \(\highlight[blue]{\text{Compatibility:}}\)
+  \(
+    \partial\,((\kappa_i)_n)_* = ((\kappa_i)_{n-1})_*\,\partial,
+    \partial\,\beta_n = \beta_{n-1}\,\partial.
+  \)
+  Hence \(\beta_\bullet\) induces \(H_n(\beta_\bullet)\).
+\end{frame}
+
+\begin{frame}{Moore--Mayer--Vietoris}{Proof idea for \(\partial_n\).}
+  Assume a \(\highlight[red]{\text{SES}}\) of Moore chain complexes
+  \[
+    \begin{aligned}
+      0 \to C_c\bigl((\G|_{U_{12}})_\bullet,A\bigr)
+      &\xrightarrow{\alpha_\bullet}
+      C_c\bigl((\G|_{U_1})_\bullet,A\bigr)\oplus C_c\bigl((\G|_{U_2})_\bullet,A\bigr)
+      \\
+      &\xrightarrow{\beta_\bullet}
+      C_c\bigl(\G_\bullet,A\bigr)\to 0.
+    \end{aligned}
+  \]
+  Here \(\partial\) denotes the Moore boundary.
+
+  Let \([c]\in H_n(\G;A)\) with \(\partial c=0\) and choose \(b\) with \(\highlight[red]{\beta_n(b)=c}\).
+
+  Then \(\beta_{n-1}(\partial b)=\partial(\beta_n(b))=\partial c=0\), hence
+  \[
+    \partial b\in \ker(\beta_{n-1})=\operatorname{im}(\alpha_{n-1}).
+  \]
+  Choose \(a\in C_c\bigl((\G|_{U_{12}})_{n-1},A\bigr)\) with \(\highlight[red]{\alpha_{n-1}(a)=\partial b}\) and define
+  \[
+    \partial_n([c])\coloneqq [a]\in H_{n-1}(\G|_{U_{12}};A).
+  \]
+
+  \(\highlight[blue]{\text{Standard homological algebra:}}\)
+  \(\partial_n\) is well-defined, independent of choices, and yields exactness at \(H_n(\G;A)\).
+\end{frame}
+
+\begin{frame}{Takeaways}{What you get and how to use it.}
+\(\highlight[gold]{\text{Setting:}}\)
+\(\G\) ample \'etale, \(A\) a topological abelian group,
+
+Moore chains \(C_c(\G_n,A)\) with boundary \(\partial=\sum_{i=0}^n (-1)^i(d_i)_*\).
+
+\vspace{0.3cm}
+
+\begin{center}
+    \(\highlight[blue]{\text{Two structural tools:}}\)
+\end{center}
+\pause
+
+\(\highlight[red]{\text{UCT for discrete coefficients:}}\)
+\(
+    0\to H_n(\G)\otimes_{\ZZ}A
+    \xrightarrow{\iota_n^{\G}}
+    H_n(\G;A)
+    \xrightarrow{\pi_n^{\G}}
+    \operatorname{Tor}_1^{\ZZ}\bigl(H_{n-1}(\G),A\bigr)\to 0.
+\)
+\vspace{0.2cm}
+\pause
+
+\(\highlight[red]{\text{Moore--Mayer--Vietoris}}\)
+
+for a \(\highlight[blue]{\text{clopen saturated cover}}\)
+\(U_1\cup U_2=\G_0\).
+
+There is a natural long exact sequence relating
+
+\[
+H_\bullet(\G;A), H_\bullet(\G|_{U_1};A), H_\bullet(\G|_{U_2};A), H_\bullet(\G|_{U_{12}};A).
+\]
+\end{frame}
+
+\begin{frame}{Takeaways}{What you get and how to use it.}
+\begin{center}
+\(\highlight[blue]{\text{Why discreteness matters:}}\)
+\end{center}
+
+For non-discrete \(A\), the canonical comparison
+\[
+\Phi_X:\ C_c(X,\ZZ)\otimes_{\ZZ}A \to C_c(X,A),
+\qquad
+\chi_U\otimes a \mapsto a\,\chi_U,
+\]
+need not be surjective. Tensor-level reduction in UCT can fail.
+
+\vspace{0.1cm}
+\pause
+
+\begin{center}
+\(\highlight[blue]{\text{How to use in practice:}}\)
+\end{center}
+
+Choose a clopen saturated cover.
+
+\(U_1,U_2\subseteq \G_0\) so that reductions \(\G|_{U_1}\), \(\G|_{U_2}\), \(\G|_{U_{12}}\) are computable.
+
+Compute integral homology.
+
+\(H_\bullet(\G|_{U_i})\), \(H_\bullet(\G|_{U_{12}})\),
+then \(\highlight[red]{\text{glue}}\) to \(H_\bullet(\G)\) via MMV.
+\end{frame}
+
+\begin{frame}[plain,c]
+  \begin{center}
+    \Huge \textbf{Thank you.}
+  \end{center}
+\end{frame}
+
+\appendix
+
+\begin{frame}[plain,c]
+  \begin{center}
+    \Huge \textbf{Homology of SFT Groupoids}
+  \end{center}
+\end{frame}
+
+\begin{frame}{Example: Diaconu-Renault Groupoid}{Computing Homology with Moore--Mayer--Vietoris + UCT.}
+  \(A\in \operatorname{Mat}(N\times N, \mathbb N_0)\) with no zero row and no zero column.\\
+  \(E_A\) a finite directed graph whose adjacency matrix is \(A\).\\[0.2cm]
+  The $\highlight[red]{\text{infinite path space}}$ is given by $\highlight[blue]{\text{Sims 2021, 2.5:}}$\\
+  \(E_A^\infty
+  = \left\{(e_n)_{n\ge 1}\in E_A^{\mathbb N}\ \middle|\ r(e_n)=s(e_{n+1})\ \text{for all } n\ge 1 \right\}
+  \) with \\
+  \(r(x,n,y)=x\), \(s(x,n,y)=y\), \(1_x=(x,0,x)\),\\
+  \((x,n,y)^{-1}=(y,-n,x)\), \((x,n,y) \cdot (y,m,z)=(x,n+m,z)\) if \(s(x,n,y)=r(y,m,z)\).\\[0.2cm]
+  \(\sigma\colon E_A^{\infty}\to E_A^{\infty}, (e_0,e_1,e_2,\ldots)\mapsto (e_1,e_2,e_3,\ldots)\).\\
+  \((\mathcal G_A)_0=E_A^\infty\). \\
+  \(
+    \begin{aligned}
+      (\mathcal G_A)_1 = \{(x,n,y)\in E_A^\infty\times\mathbb Z\times E_A^\infty \mid \exists\ k, \ell\in\mathbb N_0:\ n=k-\ell, \ \sigma^k(x)=\sigma^\ell(y)\}.
+    \end{aligned}
+  \)
+\end{frame}
+
+\begin{frame}{Example: Diaconu-Renault Groupoid}{Homology of SFT-Groupoids is well known.}
+  \(\mathbf{1}-A^{\mathsf T}\) acts on \(\mathbb Z^N\) and we have by $\highlight[blue]{\text{Matui 2012, 4.14:}}$
+  \[
+    \begin{aligned}
+      H_0(\mathcal G_A) &\cong \highlight[red]{\operatorname{coker}(\mathbf{1}-A^{\mathsf T})},\\
+      H_1(\mathcal G_A) &\cong \highlight[red]{\ker(\mathbf{1}-A^{\mathsf T})},\\
+      H_n(\mathcal G_A) &= 0\ \ \text{for}\ n\ge 2.
+    \end{aligned}
+  \]
+  Consider now:
+  \[
+    A=\begin{pmatrix}2&1\\[2pt]1&0\end{pmatrix},\qquad
+    B=\begin{pmatrix}2&1\\[2pt]1&2\end{pmatrix},\qquad
+    C=(3).
+  \]
+  We compute the integral homology of \(\mathcal G_A\), \(\mathcal G_B\), and \(\mathcal G_C\).
+\end{frame}
+
+\begin{frame}{Example: Diaconu-Renault Groupoid}{Computing Homology for $\G_A$.}
+  For \(A\) we have
+  \[
+    \mathbf{1}-A^{\mathsf T}=
+    \begin{pmatrix}-1&-1\\[2pt]-1&1\end{pmatrix},
+    \qquad
+    \det(\mathbf{1}-A^{\mathsf T})=-2.
+  \]
+  Hence \(\mathbf{1}-A^{\mathsf T}\) has full rank over \(\mathbb Z\) and \(\highlight[blue]{\ker(\mathbf{1}-A^{\mathsf T})=0}\).
+
+  Moreover, the Smith normal form is
+  \[
+    \begin{pmatrix}
+      -1 & -1\\
+      -1 &  1
+    \end{pmatrix}
+    \overset{R_1\leftarrow - R_1}{\longrightarrow}
+    \begin{pmatrix}
+      1 & 1\\
+      -1 & 1
+    \end{pmatrix}
+    \overset{R_2\leftarrow R_2+R_1}{\longrightarrow}
+    \begin{pmatrix}
+      1 & 1\\
+      0 & 2
+    \end{pmatrix}
+    \overset{C_2\leftarrow C_2- C_1}{\longrightarrow}
+    \begin{pmatrix}
+      1 & 0\\
+      0 & 2
+    \end{pmatrix},
+  \]
+  so \(\highlight[red]{\operatorname{coker}(\mathbf{1}-A^{\mathsf T})\cong \mathbb Z/2\mathbb Z}\).\\[0.2cm]
+  We get \(\highlight[red]{H_0(\mathcal G_A) \cong \mathbb Z/2\mathbb Z}\), \(\highlight[blue]{H_1(\mathcal G_A) = 0}\), \(\highlight[gold]{H_n(\mathcal G_A) = 0} \ \text{for}\ n\ge 2.\)
+\end{frame}
+
+\begin{frame}{Example: Diaconu-Renault Groupoid}{Computing Homology for $\G_B$.}
+  For \(B\) we have
+  \[
+    \mathbf{1}-B^{\mathsf T}=
+    \begin{pmatrix}-1&-1\\[2pt]-1&-1\end{pmatrix}.
+  \]
+  \((\mathbf{1}-B^{\mathsf T})(x,y)^{\mathsf T}=0 \Leftrightarrow -x-y=0\), hence \(\highlight[blue]{\ker(\mathbf{1}-B^{\mathsf T})\cong\mathbb Z}\).\\
+  The image is generated by \((1,1)\), which is primitive in \(\mathbb Z^2\), so \(\highlight[red]{\operatorname{coker}(\mathbf{1}-B^{\mathsf T})\cong \mathbb Z^2/\langle(1,1)\rangle_{\mathbb Z}\cong\mathbb Z}\).\\[0.2cm]
+
+  Thus, we have for homology \(\highlight[red]{H_0(\mathcal G_B) \cong \mathbb Z}\), \(\highlight[blue]{H_1(\mathcal G_B) \cong \mathbb Z}\), \(\highlight[gold]{H_n(\mathcal G_B) = 0} \ \text{for}\ n\ge 2.\)
+\end{frame}
+
+\begin{frame}{Example: Diaconu-Renault Groupoid}{Computing Homology for $\G_C$.}
+  For \(C\) we have \(\mathbf{1}-C^{\mathsf T}=-2\), so\\
+  \(\highlight[blue]{\ker(\mathbf{1}-C^{\mathsf T})=0}\) and \(\highlight[red]{\operatorname{coker}(\mathbf{1}-C^{\mathsf T})\cong \mathbb Z/2\mathbb Z}\).\\[0.2cm]
+
+  Hence \(\highlight[red]{H_0(\mathcal G_C) \cong \mathbb Z/2\mathbb Z}\), \(\highlight[blue]{H_1(\mathcal G_C) = 0}\), \(\highlight[gold]{H_n(\mathcal G_C) = 0} \ \text{for}\ n\ge 2.\)
+\end{frame}
+
+\begin{frame}{Example: Diaconu-Renault Groupoid}{The disjoint union groupoid.}
+We have $\G = \G_A \sqcup \G_B \sqcup \G_C$, the disjoint union groupoid.
+
+The nerve decomposes levelwise to $\G_n = (\G_A)_n \sqcup (\G_B)_n \sqcup (\G_C)_n$.
+
+The Moore chain complex splits as a direct sum, thus
+\[
+H_n(\mathcal G)\cong H_n(\mathcal G_A)\oplus H_n(\mathcal G_B)\oplus H_n(\mathcal G_C)
+\ \text{for} \ n\ge 0.
+\]
+In particular
+\[
+\begin{aligned}
+H_0(\mathcal G) &\cong \mathbb Z\oplus (\mathbb{Z}/2\mathbb{Z})^2, & H_1(\mathcal G) &\cong \mathbb Z, & H_n(\mathcal G) &= 0\ \text{for} \ n\ge 2.
+\end{aligned}
+\]
+Define
+\(
+U_1 \coloneqq (\mathcal G_A)_0\sqcup(\mathcal G_B)_0, U_2 \coloneqq (\mathcal G_B)_0\sqcup(\mathcal G_C)_0.
+\)
+\end{frame}
+
+\begin{frame}{Example: Diaconu-Renault Groupoid}{The reduction groupoids.}
+The reductions are
+\[
+\begin{aligned}
+\mathcal G|_{U_1} &= \mathcal G_A\sqcup \mathcal G_B,&
+\mathcal G|_{U_2} &= \mathcal G_B\sqcup \mathcal G_C,&
+\mathcal G|_{U_1\cap U_2} &= \mathcal G_B.
+\end{aligned}
+\]
+This yields the long exact sequence
+\[
+\begin{aligned}
+\cdots\to
+H_n(\mathcal G_B)
+&\xrightarrow{\highlight[red]{\alpha_n}}
+H_n(\mathcal G_A\sqcup\mathcal G_B)\oplus H_n(\mathcal G_B\sqcup\mathcal G_C)
+\xrightarrow{\highlight[blue]{\beta_n}} \\
+&\xrightarrow{\highlight[blue]{\beta_n}}
+H_n(\mathcal G)
+\xrightarrow{\highlight[gold]{\partial_n}}
+H_{n-1}(\mathcal G_B)
+\to\cdots.
+\end{aligned}
+\]
+\end{frame}
+
+
+\begin{frame}{Example: Diaconu-Renault Groupoid}{Explicit formulas for \(\alpha_n\), \(\beta_n\), \(\partial_n\)}
+\[
+\begin{aligned}
+\highlight[red]{\alpha_n}&\colon H_n(\G_B)\to
+H_n(\G_A)\oplus H_n(\G_B)\oplus H_n(\G_B)\oplus H_n(\G_C),\\
+&[b] \mapsto ([0],[b],[-b],[0]),\\
+\highlight[red]{\beta_n}&\colon
+H_n(\G_A)\oplus H_n(\G_B)\oplus H_n(\G_B)\oplus H_n(\G_C)
+\to H_n(\G_A)\oplus H_n(\G_B)\oplus H_n(\G_C),\\
+&([a],[b_1],[b_2],[c]) \mapsto ([a],[b_1+b_2],[c]).
+\end{aligned}
+\]
+
+\vspace{0.25cm}
+
+\(\highlight[gold]{\partial_n}\) vanishes in this example by exactness
+\(
+\highlight[gold]{\partial_n}=0\colon H_n(\G)\to H_{n-1}(\G_B),
+\)
+since \(\beta_n\) is surjective and
+\(
+\ker(\beta_n)=\{([0],[b],[-b],[0])\mid b\in H_n(\G_B)\}=\operatorname{im}(\alpha_n)
+\).
+\end{frame}
+
+\begin{frame}{Finite coefficients via UCT}{Final homology groups for \(\ZZ/p\ZZ\).}
+\small
+Fix a prime \(p\). Assume
+\(H_2(\G)=0, H_1(\G)\cong \ZZ, H_0(\G)\cong \ZZ\oplus (\ZZ/2\ZZ)^2.\)
+
+\vspace{0.2cm}
+
+\(\highlight[blue]{\text{Vanishing in higher degrees:}}\)
+\(H_n(\G;\ZZ/p\ZZ)=0
+\quad\text{for all } n\ge 2.
+\)
+
+\(\highlight[blue]{\text{Degree \(0\):}}\)
+\[
+H_0(\G;\ZZ/p\ZZ)\cong H_0(\G)\otimes_{\ZZ}\ZZ/p\ZZ
+\cong
+\begin{cases}
+\ZZ/p\ZZ, & \text{for \(p\) odd},\\
+(\ZZ/2\ZZ)^3, & \text{for \(p=2\)}.
+\end{cases}
+\]
+
+\(\highlight[blue]{\text{Degree \(1\) via UCT:}}\)
+\[
+0\to H_1(\G)\otimes_{\ZZ}\ZZ/p\ZZ \to H_1(\G;\ZZ/p\ZZ)\to \operatorname{Tor}_1^{\ZZ}\bigl(H_0(\G),\ZZ/p\ZZ\bigr)\to 0,
+\]
+hence
+\[
+H_1(\G;\ZZ/p\ZZ)\cong
+\begin{cases}
+\ZZ/p\ZZ, & \text{for \(p\) odd},\\
+(\ZZ/2\ZZ)^3, & \text{for \(p=2\)}.
+\end{cases}
+\]
+\end{frame}
+
+\begin{frame}[allowframebreaks, noframenumbering]{References}
+  \printbibliography
+  \nocite{*}
+\end{frame}
+
+\end{document}
