@@ -578,7 +578,7 @@ is the standard isomorphism $\mathbb{Z}\otimes_{\mathbb{Z}}A\to A$, $1\otimes a\
 \begin{frame}{Reductions and Moore--Mayer--Vietoris}{Long Natural Moore-Mayer-Vietoris Sequence for Homology.}
 For \(U\subseteq \G_0\) define the reduction
 \[
-\G|_U \coloneqq \{g\in \G \mid s(g)\in U,\ r(g)\in U\},
+\G|_U \coloneqq \{g\in \G \mid s(g),r(g)\in U\},
 \qquad
 (\G|_U)_0 = U,
 \]
@@ -693,7 +693,7 @@ $\highlight[blue]{\textbf{Moore--Mayer--Vietoris long exact homology sequence:}}
 
 \begin{frame}{Takeaways}{What you get and how to use it.}
 \(\highlight[gold]{\text{Setting:}}\)
-\(\G\) ample \'etale, \(A\) a topological abelian group,
+\(\G\) ample \'etale, \(A\) a discrete abelian group,
 
 Moore chains \(C_c(\G_n,A)\) with boundary \(\partial=\sum_{i=0}^n (-1)^i(d_i)_*\).
 
@@ -773,13 +773,12 @@ then \(\highlight[red]{\text{glue}}\) to \(H_\bullet(\G)\) via MMV.
 
 \begin{frame}{Example: Diaconu-Renault Groupoid}{Computing Homology with Moore--Mayer--Vietoris + UCT.}
   \(A\in \operatorname{Mat}(N\times N, \mathbb N_0)\) with no zero row and no zero column.\\
-  \(E_A\) a finite directed graph whose adjacency matrix is \(A\).\\[0.2cm]
+  \((E^{(1)}_A,E^{(0)}_A,s_{E^{(1)}_A},r_{E^{(1)}_A})\) a finite directed graph whose adjacency matrix is \(A\).\\[0.2cm]
   The $\highlight[red]{\text{infinite path space}}$ is given by $\highlight[blue]{\text{Sims 2021, 2.5:}}$\\
   \(E_A^\infty
-  = \left\{(e_n)_{n\ge 1}\in E_A^{\mathbb N}\ \middle|\ r(e_n)=s(e_{n+1})\ \text{for all } n\ge 1 \right\}
-  \) with \\
-  \(r(x,n,y)=x\), \(s(x,n,y)=y\), \(1_x=(x,0,x)\),\\
-  \((x,n,y)^{-1}=(y,-n,x)\), \((x,n,y) \cdot (y,m,z)=(x,n+m,z)\) if \(s(x,n,y)=r(y,m,z)\).\\[0.2cm]
+  = \left\{(e_n)_{n\ge 1}\in (E_A^1)^{\mathbb N}\ \middle|\ r_{E^{(1)}_A}(e_n)=s_{E^{(1)}_A}(e_{n+1})\ \text{for all } n\ge 1 \right\}
+  \)
+  with \\
   \(\sigma\colon E_A^{\infty}\to E_A^{\infty}, (e_0,e_1,e_2,\ldots)\mapsto (e_1,e_2,e_3,\ldots)\).\\
   \((\mathcal G_A)_0=E_A^\infty\). \\
   \(
@@ -787,6 +786,8 @@ then \(\highlight[red]{\text{glue}}\) to \(H_\bullet(\G)\) via MMV.
       (\mathcal G_A)_1 = \{(x,n,y)\in E_A^\infty\times\mathbb Z\times E_A^\infty \mid \exists\ k, \ell\in\mathbb N_0:\ n=k-\ell, \ \sigma^k(x)=\sigma^\ell(y)\}.
     \end{aligned}
   \)
+  \(s(x,n,y)=x\), \(r(x,n,y)=y\), \(1_x=(x,0,x)\),\\
+  \((x,n,y)^{-1}=(y,-n,x)\), \((x,n,y) \cdot (y,m,z)=(x,n+m,z)\) if \(s(x,n,y)=r(y,m,z)\).
 \end{frame}
 
 \begin{frame}{Example: Diaconu-Renault Groupoid}{Homology of SFT-Groupoids is well known.}
