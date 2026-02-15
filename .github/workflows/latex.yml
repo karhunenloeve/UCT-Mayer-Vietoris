@@ -1,16 +1,28 @@
-# .github/workflows/latex.yml
-name: build-latex
+# .github/workflows/latex-commit-pdfs.yml
+name: build-and-commit-pdfs
 
 on:
   push:
+    branches:
+      - main
+      - master
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
-  lualatex:
+  build:
+    # Prevent infinite loops by not re-running on the bot's own commit
+    if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: true
 
       - name: Compile with LuaLaTeX
         uses: xu-cheng/latex-action@v3
@@ -22,11 +34,25 @@ jobs:
             Newcastle.tex
             Erlangen.tex
 
-      - name: Upload PDFs
-        uses: actions/upload-artifact@v4
-        with:
-          name: pdfs
-          path: |
-            Presentation.pdf
-            Newcastle.pdf
-            Erlangen.pdf
+      - name: Collect PDFs into generated-pdfs
+        run: |
+          mkdir -p generated-pdfs
+          mv -f Presentation.pdf generated-pdfs/Presentation.pdf
+          mv -f Newcastle.pdf generated-pdfs/Newcastle.pdf
+          mv -f Erlangen.pdf generated-pdfs/Erlangen.pdf
+
+      - name: Commit and push PDFs
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git add generated-pdfs/*.pdf
+
+          # Only commit if there are changes
+          if git diff --cached --quiet; then
+            echo "No PDF changes to commit."
+            exit 0
+          fi
+
+          git commit -m "Update PDFs [skip ci]"
+          git push
