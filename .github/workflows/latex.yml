@@ -1,0 +1,32 @@
+# .github/workflows/latex.yml
+name: build-latex
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  lualatex:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Compile with LuaLaTeX
+        uses: xu-cheng/latex-action@v3
+        with:
+          latexmk_use_lualatex: true
+          args: -interaction=nonstopmode -halt-on-error -file-line-error
+          root_file: |
+            Presentation.tex
+            Newcastle.tex
+            Erlangen.tex
+
+      - name: Upload PDFs
+        uses: actions/upload-artifact@v4
+        with:
+          name: pdfs
+          path: |
+            Presentation.pdf
+            Newcastle.pdf
+            Erlangen.pdf
