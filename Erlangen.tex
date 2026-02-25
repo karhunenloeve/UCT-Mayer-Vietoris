@@ -242,58 +242,6 @@
   \]
 \end{frame}
 
-\begin{frame}{Universal Coefficient Theorem}{If \(A\) is discrete, then \(C_c(\G_n,A)\) is a free \(A\)-module.}
-  Let \(f\in C_c(\G_n,A)\). Since \(A\) is discrete and \(\supp(f)\) is compact, \(\operatorname{im}(f)=\{a_1,\ldots,a_m\}\) is finite.
-  Set \(K_i\coloneqq f^{-1}(\{a_i\})\) for \(1\le i\le m\).\pause
-  
-  Each \(K_i\) is clopen in \(\G_n\), the sets \(K_i\) are pairwise disjoint, and \(\supp(f)=\bigsqcup_{i=1}^m K_i\).
-  \[
-    f=\sum_{i=1}^m a_i\,\chi_{K_i}\qquad\text{in }C_c(\G_n,A).
-  \]
-  \pause
-  Therefore the canonical map
-  \[
-    \bigoplus_{K\in \mathcal{K}(\G_n)} A \longrightarrow C_c(\G_n,A),
-    \qquad
-    (a_K)_{K\in \mathcal{K}(\G_n)}\longmapsto \sum_{K\in \mathcal{K}(\G_n)} a_K\,\chi_K,
-  \]
-  is surjective.
-  It is injective: if \(\sum_{i=1}^m a_i\,\chi_{K_i}=0\) with \(K_i\) pairwise disjoint compact open, then evaluating at any \(g\in K_i\) gives \(a_i=0\).
-  Thus
-  \[
-    C_c(\G_n,A)\cong \bigoplus_{K\in \mathcal{K}(\G_n)} A,
-    \quad \highlight[blue]{\text{free as an \(A\)\nobreakdash-module}}.
-  \]
-\end{frame}
-
-\begin{frame}{Non-discrete Coefficients: What Fails}{The general result.}
-For \(X\) $\highlight[blue]{\text{locally compact}}$, $\highlight[blue]{\text{totally disconnected}}$, $\highlight[blue]{\text{Hausdorff}}$ with a $\highlight[blue]{\text{basis of compact open sets}}$ and an abelian group \(A\), consider the canonical map
-\[
-\Phi_X\colon C_c(X,\ZZ)\otimes_{\ZZ}A \to C_c(X,A),
-\qquad
-\chi_U\otimes a \mapsto a\,\chi_U.
-\]
-Then
-\[
-\operatorname{im}(\Phi_X)\subseteq \{\xi\in C_c(X,A)\mid \xi(X)\ \text{is finite}\}.
-\]
-\pause
-
-In particular, \(\Phi_X\) may $\highlight[red]{\text{fail}}$ to be surjective for $\highlight[red]{\text{non-discrete } A}$.
-Moreover,
-\[
-\Phi_X\ \text{surjective}
-\Leftrightarrow
-\forall\,\xi\in C_c(X,A):\ \xi(X)\ \text{finite}
-\Leftrightarrow
-\Phi_X\ \text{is an isomorphism}.
-\]
-\pause
-
-If \(A\) is discrete, then \(\Phi_X\) is an isomorphism.
-The converse can fail.
-\end{frame}
-
 \begin{frame}[plain,c]
   \begin{center}
     \Huge \textbf{Moore-Mayer-Vietoris Sequence}
@@ -413,44 +361,6 @@ There is a natural long exact sequence relating
 H_\bullet(\G;A), H_\bullet(\G|_{U_1};A), H_\bullet(\G|_{U_2};A), H_\bullet(\G|_{U_{12}};A).
 \]
 \end{frame}
-
-\begin{frame}{Takeaways}{What you get and how to use it.}
-\begin{center}
-\(\highlight[blue]{\text{Why discreteness matters:}}\)
-\end{center}
-
-For non-discrete \(A\), the canonical comparison
-\[
-\Phi_X:\ C_c(X,\ZZ)\otimes_{\ZZ}A \to C_c(X,A),
-\qquad
-\chi_U\otimes a \mapsto a\,\chi_U,
-\]
-need not be surjective. Tensor-level reduction in UCT can fail.
-
-\vspace{0.1cm}
-\pause
-
-\begin{center}
-\(\highlight[blue]{\text{How to use in practice:}}\)
-\end{center}
-
-Choose a clopen saturated cover.
-
-\(U_1,U_2\subseteq \G_0\) so that reductions \(\G|_{U_1}\), \(\G|_{U_2}\), \(\G|_{U_{12}}\) are computable.
-
-Compute integral homology.
-
-\(H_\bullet(\G|_{U_i})\), \(H_\bullet(\G|_{U_{12}})\),
-then \(\highlight[red]{\text{glue}}\) to \(H_\bullet(\G)\) via MMV.
-\end{frame}
-
-\begin{frame}[plain,c]
-  \begin{center}
-    \Huge \textbf{Thank you.}
-  \end{center}
-\end{frame}
-
-\appendix
 
 \begin{frame}[plain,c]
   \begin{center}
@@ -572,57 +482,6 @@ U_1 \coloneqq (\mathcal G_A)_0\sqcup(\mathcal G_B)_0, U_2 \coloneqq (\mathcal G_
 \)
 \end{frame}
 
-\begin{frame}{Example: Diaconu-Renault Groupoid}{The reduction groupoids.}
-The reductions are
-\[
-\begin{aligned}
-\mathcal G|_{U_1} &= \mathcal G_A\sqcup \mathcal G_B,&
-\mathcal G|_{U_2} &= \mathcal G_B\sqcup \mathcal G_C,&
-\mathcal G|_{U_1\cap U_2} &= \mathcal G_B.
-\end{aligned}
-\]
-This yields the long exact sequence
-\[
-\begin{aligned}
-\cdots\to
-H_n(\mathcal G_B)
-&\xrightarrow{\highlight[red]{\alpha_n}}
-H_n(\mathcal G_A\sqcup\mathcal G_B)\oplus H_n(\mathcal G_B\sqcup\mathcal G_C)
-\xrightarrow{\highlight[blue]{\beta_n}} \\
-&\xrightarrow{\highlight[blue]{\beta_n}}
-H_n(\mathcal G)
-\xrightarrow{\highlight[gold]{\partial_n}}
-H_{n-1}(\mathcal G_B)
-\to\cdots.
-\end{aligned}
-\]
-\end{frame}
-
-
-\begin{frame}{Example: Diaconu-Renault Groupoid}{Explicit formulas for \(\alpha_n\), \(\beta_n\), \(\partial_n\)}
-\[
-\begin{aligned}
-\highlight[red]{\alpha_n}&\colon H_n(\G_B)\to
-H_n(\G_A)\oplus H_n(\G_B)\oplus H_n(\G_B)\oplus H_n(\G_C),\\
-&[b] \mapsto ([0],[b],[-b],[0]),\\
-\highlight[red]{\beta_n}&\colon
-H_n(\G_A)\oplus H_n(\G_B)\oplus H_n(\G_B)\oplus H_n(\G_C)
-\to H_n(\G_A)\oplus H_n(\G_B)\oplus H_n(\G_C),\\
-&([a],[b_1],[b_2],[c]) \mapsto ([a],[b_1+b_2],[c]).
-\end{aligned}
-\]
-
-\vspace{0.25cm}
-
-\(\highlight[gold]{\partial_n}\) vanishes in this example by exactness
-\(
-\highlight[gold]{\partial_n}=0\colon H_n(\G)\to H_{n-1}(\G_B),
-\)
-since \(\beta_n\) is surjective and
-\(
-\ker(\beta_n)=\{([0],[b],[-b],[0])\mid b\in H_n(\G_B)\}=\operatorname{im}(\alpha_n)
-\).
-\end{frame}
 
 \begin{frame}{Finite coefficients via UCT}{Final homology groups for \(\ZZ/p\ZZ\).}
 \small
@@ -659,6 +518,98 @@ H_1(\G;\ZZ/p\ZZ)\cong
 \end{cases}
 \]
 \end{frame}
+
+
+\begin{frame}{Takeaways}{What you get and how to use it.}
+\begin{center}
+\(\highlight[blue]{\text{Why discreteness matters:}}\)
+\end{center}
+
+For non-discrete \(A\), the canonical comparison
+\[
+\Phi_X:\ C_c(X,\ZZ)\otimes_{\ZZ}A \to C_c(X,A),
+\qquad
+\chi_U\otimes a \mapsto a\,\chi_U,
+\]
+need not be surjective. Tensor-level reduction in UCT can fail.
+
+\vspace{0.1cm}
+\pause
+
+\begin{center}
+\(\highlight[blue]{\text{How to use in practice:}}\)
+\end{center}
+
+Choose a clopen saturated cover.
+
+\(U_1,U_2\subseteq \G_0\) so that reductions \(\G|_{U_1}\), \(\G|_{U_2}\), \(\G|_{U_{12}}\) are computable.
+
+Compute integral homology.
+
+\(H_\bullet(\G|_{U_i})\), \(H_\bullet(\G|_{U_{12}})\),
+then \(\highlight[red]{\text{glue}}\) to \(H_\bullet(\G)\) via MMV.
+\end{frame}
+
+\begin{frame}[plain,c]
+  \begin{center}
+    \Huge \textbf{Thank you.}
+  \end{center}
+\end{frame}
+
+\appendix
+
+\begin{frame}{Universal Coefficient Theorem}{If \(A\) is discrete, then \(C_c(\G_n,A)\) is a free \(A\)-module.}
+  Let \(f\in C_c(\G_n,A)\). Since \(A\) is discrete and \(\supp(f)\) is compact, \(\operatorname{im}(f)=\{a_1,\ldots,a_m\}\) is finite.
+  Set \(K_i\coloneqq f^{-1}(\{a_i\})\) for \(1\le i\le m\).\pause
+  
+  Each \(K_i\) is clopen in \(\G_n\), the sets \(K_i\) are pairwise disjoint, and \(\supp(f)=\bigsqcup_{i=1}^m K_i\).
+  \[
+    f=\sum_{i=1}^m a_i\,\chi_{K_i}\qquad\text{in }C_c(\G_n,A).
+  \]
+  \pause
+  Therefore the canonical map
+  \[
+    \bigoplus_{K\in \mathcal{K}(\G_n)} A \longrightarrow C_c(\G_n,A),
+    \qquad
+    (a_K)_{K\in \mathcal{K}(\G_n)}\longmapsto \sum_{K\in \mathcal{K}(\G_n)} a_K\,\chi_K,
+  \]
+  is surjective.
+  It is injective: if \(\sum_{i=1}^m a_i\,\chi_{K_i}=0\) with \(K_i\) pairwise disjoint compact open, then evaluating at any \(g\in K_i\) gives \(a_i=0\).
+  Thus
+  \[
+    C_c(\G_n,A)\cong \bigoplus_{K\in \mathcal{K}(\G_n)} A,
+    \quad \highlight[blue]{\text{free as an \(A\)\nobreakdash-module}}.
+  \]
+\end{frame}
+
+\begin{frame}{Non-discrete Coefficients: What Fails}{The general result.}
+For \(X\) $\highlight[blue]{\text{locally compact}}$, $\highlight[blue]{\text{totally disconnected}}$, $\highlight[blue]{\text{Hausdorff}}$ with a $\highlight[blue]{\text{basis of compact open sets}}$ and an abelian group \(A\), consider the canonical map
+\[
+\Phi_X\colon C_c(X,\ZZ)\otimes_{\ZZ}A \to C_c(X,A),
+\qquad
+\chi_U\otimes a \mapsto a\,\chi_U.
+\]
+Then
+\[
+\operatorname{im}(\Phi_X)\subseteq \{\xi\in C_c(X,A)\mid \xi(X)\ \text{is finite}\}.
+\]
+\pause
+
+In particular, \(\Phi_X\) may $\highlight[red]{\text{fail}}$ to be surjective for $\highlight[red]{\text{non-discrete } A}$.
+Moreover,
+\[
+\Phi_X\ \text{surjective}
+\Leftrightarrow
+\forall\,\xi\in C_c(X,A):\ \xi(X)\ \text{finite}
+\Leftrightarrow
+\Phi_X\ \text{is an isomorphism}.
+\]
+\pause
+
+If \(A\) is discrete, then \(\Phi_X\) is an isomorphism.
+The converse can fail.
+\end{frame}
+
 
 \begin{frame}[plain,c]
   \begin{center}
@@ -878,6 +829,63 @@ is the standard isomorphism $\mathbb{Z}\otimes_{\mathbb{Z}}A\to A$, $1\otimes a\
 
   \(\highlight[blue]{\text{Standard homological algebra:}}\)
   \(\partial_n\) is well-defined, independent of choices, and yields exactness at \(H_n(\G;A)\).
+\end{frame}
+
+\begin{frame}{Example: Diaconu-Renault Groupoid}{The reduction groupoids.}
+The reductions are
+\[
+\begin{aligned}
+\mathcal G|_{U_1} &= \mathcal G_A\sqcup \mathcal G_B,&
+\mathcal G|_{U_2} &= \mathcal G_B\sqcup \mathcal G_C,&
+\mathcal G|_{U_1\cap U_2} &= \mathcal G_B.
+\end{aligned}
+\]
+This yields the long exact sequence
+\[
+\begin{aligned}
+\cdots\to
+H_n(\mathcal G_B)
+&\xrightarrow{\highlight[red]{\alpha_n}}
+H_n(\mathcal G_A\sqcup\mathcal G_B)\oplus H_n(\mathcal G_B\sqcup\mathcal G_C)
+\xrightarrow{\highlight[blue]{\beta_n}} \\
+&\xrightarrow{\highlight[blue]{\beta_n}}
+H_n(\mathcal G)
+\xrightarrow{\highlight[gold]{\partial_n}}
+H_{n-1}(\mathcal G_B)
+\to\cdots.
+\end{aligned}
+\]
+\end{frame}
+
+\begin{frame}[plain,c]
+  \begin{center}
+    \Huge \textbf{Diaconu-Renault Example}
+  \end{center}
+\end{frame}
+
+\begin{frame}{Example: Diaconu-Renault Groupoid}{Explicit formulas for \(\alpha_n\), \(\beta_n\), \(\partial_n\)}
+\[
+\begin{aligned}
+\highlight[red]{\alpha_n}&\colon H_n(\G_B)\to
+H_n(\G_A)\oplus H_n(\G_B)\oplus H_n(\G_B)\oplus H_n(\G_C),\\
+&[b] \mapsto ([0],[b],[-b],[0]),\\
+\highlight[red]{\beta_n}&\colon
+H_n(\G_A)\oplus H_n(\G_B)\oplus H_n(\G_B)\oplus H_n(\G_C)
+\to H_n(\G_A)\oplus H_n(\G_B)\oplus H_n(\G_C),\\
+&([a],[b_1],[b_2],[c]) \mapsto ([a],[b_1+b_2],[c]).
+\end{aligned}
+\]
+
+\vspace{0.25cm}
+
+\(\highlight[gold]{\partial_n}\) vanishes in this example by exactness
+\(
+\highlight[gold]{\partial_n}=0\colon H_n(\G)\to H_{n-1}(\G_B),
+\)
+since \(\beta_n\) is surjective and
+\(
+\ker(\beta_n)=\{([0],[b],[-b],[0])\mid b\in H_n(\G_B)\}=\operatorname{im}(\alpha_n)
+\).
 \end{frame}
 
 \begin{frame}[allowframebreaks, noframenumbering]{References}
