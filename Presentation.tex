@@ -147,11 +147,10 @@
     m\colon \G_2\to \G.
   \]
   \[
-    \highlight[red]{s}(g)=g^{-1}\cdot g,
+    u(x)=1_x,
+    \qquad\highlight[red]{s}(g)=g^{-1}\cdot g,
     \qquad
-    \highlight[red]{r}(g)=g\cdot g^{-1},
-    \qquad
-    u(x)=1_x.
+    \highlight[red]{r}(g)=g\cdot g^{-1}.
   \]
   \pause
 
@@ -1089,7 +1088,7 @@ Define inverse homeomorphisms
 \quad
 \pi_n(x,\dots,x)=x,
 \]
-so that $\highlight[red]{\pi_n\iota_n=\mathrm{id}_X}$ and $\highlight[red]{\iota_n\pi_n=\mathrm{id}_{{\G}_n}}$.\pause
+so that $\highlight[red]{\pi_n\iota_n=\mathrm{id}_X}$ and $\highlight[red]{\iota_n\pi_n=\mathrm{id}_{{\G}_n}}$.\pause 
 For $0\le i\le n$ the face map deletes one coordinate and hence satisfies
 \(
 \highlight[blue]{d_i=\iota_{n-1}\pi_n} \colon {\G}_n\to {\G}_{n-1}.
@@ -1312,11 +1311,11 @@ For every simplicial $\theta:\Delta^m\to\Delta^n$ define $\theta':\Delta^{m+1}\t
 \[
 \theta'\bigl(u_0,\dots,u_m,u_{m+1}\bigr)=\bigl(\theta(u_0,\dots,u_m),u_{m+1}\bigr).
 \]
-Then $\theta'$ is simplicial and for all $t\in\Delta^m$, $s\in[0,1]$,
+Then $\theta'$ is simplicial and can be extended such that for all $t\in\Delta^m$, $s\in[0,1]$,
 \[
-\widetilde H(\theta(t),s)=\theta'\bigl(\widetilde H(t,s)\bigr)
+\widetilde H((\theta(t),m),s)=\theta'\bigl(\widetilde H((t,n),s)\bigr)
 \Rightarrow
-\widetilde H(\theta(t),s)\approx \widetilde H(t,s).
+\widetilde H((\theta(t),m),s)\approx \widetilde H((t,n),s).
 \]
 \end{frame}
 
